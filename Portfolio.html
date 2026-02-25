@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maxime Richin | Portfolio SISR</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-color: #0b0b0d;
+            --card-bg: #16161a;
+            --accent-color: #007bff;
+            --text-main: #ffffff;
+            --text-secondary: #a0a0a0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        html { scroll-behavior: smooth; }
+        body { background-color: var(--bg-color); color: var(--text-main); line-height: 1.6; overflow-x: hidden; }
+
+        /* --- NAVIGATION --- */
+        nav {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 20px 10%; background: rgba(11, 11, 13, 0.95);
+            position: fixed; width: 100%; z-index: 1000; border-bottom: 1px solid #222;
+        }
+        .logo { font-weight: 700; font-size: 1.5rem; color: var(--accent-color); }
+        nav ul { display: flex; list-style: none; }
+        nav ul li { margin-left: 30px; }
+        nav ul li a { text-decoration: none; color: var(--text-main); font-weight: 500; transition: 0.3s; }
+        nav ul li a:hover { color: var(--accent-color); }
+
+        /* --- HERO SECTION --- */
+        #home {
+            height: 100vh; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; text-align: center; padding: 0 10%;
+        }
+        h1 { font-size: 4rem; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 2px; }
+        .subtitle { font-size: 1.5rem; color: var(--accent-color); margin-bottom: 30px; font-weight: 600; }
+        .btn-cv {
+            padding: 12px 30px; background: var(--accent-color); color: white;
+            text-decoration: none; border-radius: 50px; font-weight: 600;
+            transition: 0.3s; box-shadow: 0 0 15px rgba(0, 123, 255, 0.4);
+        }
+        .btn-cv:hover { transform: scale(1.05); box-shadow: 0 0 25px rgba(0, 123, 255, 0.6); }
+
+        /* --- SECTIONS --- */
+        section { padding: 100px 10%; border-bottom: 1px solid #1a1a1a; }
+        h2 { font-size: 2.5rem; margin-bottom: 50px; text-align: center; position: relative; }
+        h2::after { content: ''; width: 50px; height: 4px; background: var(--accent-color); position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%); }
+
+        /* --- ABOUT & BTS INFO --- */
+        .about-text { margin-bottom: 40px; font-size: 1.1rem; }
+        .bts-info h3 { color: var(--accent-color); margin-bottom: 20px; font-size: 1.8rem; }
+        .options-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 30px; }
+        .option-card { background: var(--card-bg); padding: 25px; border-radius: 15px; border: 1px solid transparent; transition: 0.3s; }
+        .option-card.highlight { border: 1px solid var(--accent-color); box-shadow: 0 0 15px rgba(0, 123, 255, 0.1); }
+        .option-card h4 { color: var(--accent-color); margin-bottom: 15px; font-size: 1.3rem; }
+        .option-card ul { margin-top: 15px; padding-left: 20px; list-style-type: square; font-size: 0.9rem; color: var(--text-secondary); }
+        .option-card ul li { margin-bottom: 5px; }
+
+        /* --- TOOLS --- */
+        .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px; text-align: center; }
+        .skill-card { background: var(--card-bg); padding: 30px; border-radius: 15px; transition: 0.3s; border: 1px solid #222; }
+        .skill-card:hover { transform: translateY(-10px); border-color: var(--accent-color); }
+        .skill-card i { font-size: 2.5rem; color: var(--accent-color); margin-bottom: 15px; }
+
+        /* --- EXPERIENCE (Timeline) --- */
+        .exp-container {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .exp-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 30px;
+            border-left: 5px solid var(--accent-color);
+            transition: 0.3s;
+        }
+
+        .exp-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .exp-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .exp-info h3 { color: var(--text-main); font-size: 1.4rem; }
+        .exp-company { color: var(--accent-color); font-weight: 600; }
+        .exp-date { color: var(--text-secondary); font-size: 0.9rem; }
+
+        .exp-body {
+            margin-top: 15px;
+            border-top: 1px solid #333;
+            padding-top: 15px;
+        }
+
+        .btn-detail {
+            display: inline-block;
+            margin-top: 15px;
+            color: var(--accent-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border: 1px solid var(--accent-color);
+            padding: 5px 15px;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+
+        .btn-detail:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        /* --- CONTACT --- */
+        .contact-cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            max-width: 1000px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .contact-card {
+            background: var(--card-bg);
+            padding: 40px 20px;
+            border-radius: 20px;
+            border: 1px solid #222;
+            transition: 0.4s;
+            cursor: pointer;
+        }
+
+        .contact-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent-color);
+            box-shadow: 0 10px 30px rgba(0, 123, 255, 0.2);
+        }
+
+        .contact-card i {
+            font-size: 2.5rem;
+            color: var(--accent-color);
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .contact-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .contact-card p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        footer { text-align: center; padding: 40px; color: var(--text-secondary); font-size: 0.8rem; background: #070708; }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="logo">M. RICHIN</div>
+    <ul>
+            <li><a href="#home">Accueil</a></li>
+            <li><a href="#about">À Propos</a></li>
+            <li><a href="#tools">Outils</a></li>
+            <li><a href="#experience">Parcours Pro</a></li>
+            <li><a href="#education">Parcours Scolaire</a></li>
+            <li><a href="#contact">Contact</a></li>
+    </ul>
+</nav>
+
+<header id="home">
+    <h1 data-aos="fade-down">MAXIME RICHIN</h1>
+    <p class="subtitle" data-aos="fade-up">Étudiant en BTS SIO SISR</p>
+    <a href="CV_Maxime_Richin.pdf" class="btn-cv" download>
+        Télécharger mon CV <i class="fas fa-download"></i>
+    </a>
+
+</header>
+
+<section id="about" data-aos="fade-up">
+    <h2>À Propos</h2>
+    <div class="about-container">
+        <div class="about-text">
+            <p>Bonjour, moi c'est <strong>Maxime Richin</strong> 👋. Je suis actuellement étudiant au <strong>lycée Saint Michel à Annecy</strong> en première année de BTS SIO (Services Informatiques aux Organisations) dans l'option <strong>SISR</strong>.</p>
+            <br>
+            <p>Actuellement toujours en cours d'étude, je vous propose sur ce portfolio de retrouver ci-dessous les différentes études que j'ai pu entreprendre au sein de ma scolarité.</p>
+        </div>
+    </div>
+
+    <div class="bts-info" style="margin-top: 50px;">
+        <h3>Qu'est ce que le BTS SIO 🎓 ?</h3>
+        <p>Avant de commencer à parler de moi, je vous propose de présenter en premier lieu ma filière dont je suis affecté.</p>
+        <p style="margin-top: 15px;">Le Brevet de Technicien Supérieur aux Services Informatiques aux Organisations (BTS SIO), s'adresse à ceux qui souhaitent se former en deux ans aux métiers d'administrateur réseau ou de développeur. Pour par la suite intégré directement le marché du travail ou continuer des études, dans le domaine de l'informatique.</p>
+
+        <p style="margin: 20px 0; font-weight: 600;">Le BTS SIO propose deux spécialités :</p>
+
+        <div class="options-grid">
+            <div class="option-card highlight">
+                <h4>Option SISR 👈 (la filière que j'ai choisis)</h4>
+                <p>L'option Solution d'infrastructure, systèmes et réseaux forme des professionnels des réseaux et équipements informatiques (installation, maintenance, sécurité). En sortant d'un BTS SIO SISR, vous serez capables de gérer et d'administrer le réseau d'une société et d'assurer sa sécurité et sa maintenance.</p>
+                <p><strong>Les techniciens supérieurs en informatique option SISR, peuvent accéder aux métiers de :</strong></p>
+                <ul>
+                    <li>Administrateur systèmes et réseaux</li>
+                    <li>Informaticien support et déploiement</li>
+                    <li>Pilote d'exploitation</li>
+                    <li>Support systèmes et réseaux</li>
+                    <li>Technicien d'infrastructure</li>
+                    <li>Technicien de production</li>
+                    <li>Technicien micro et réseaux</li>
+                </ul>
+            </div>
+
+            <div class="option-card">
+                <h4>Option SLAM</h4>
+                <p>L'option Solutions logicielles et applications métiers forme des spécialistes des logiciels (rédaction d'un cahier des charges, formulation des besoins et spécifications, développement, intégration au sein de la société).</p>
+                <p><strong>Les techniciens supérieurs en informatique option SLAM, sont préparés aux métiers de :</strong></p>
+                <ul>
+                    <li>Développeur d'applications informatiques</li>
+                    <li>Développeur informatique</li>
+                    <li>Analyste d'applications ou d'études</li>
+                    <li>Analyste programmeur</li>
+                    <li>Programmeur analyste</li>
+                    <li>Programmeur d'applications</li>
+                    <li>Responsable des services applicatifs</li>
+                    <li>Technicien d'études informatiques</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="tools">
+    <h2>Mes outils / Logiciels</h2>
+    <div class="skills-grid">
+        <div class="skill-card" data-aos="flip-left">
+            <i class="fab fa-github"></i>
+            <p>GitHub</p>
+        </div>
+        <div class="skill-card" data-aos="flip-left" data-aos-delay="100">
+            <i class="fas fa-code"></i>
+            <p>Visual Studio</p>
+        </div>
+        <div class="skill-card" data-aos="flip-left" data-aos-delay="200">
+            <i class="fas fa-server"></i>
+            <p>WampServer</p>
+        </div>
+        <div class="skill-card" data-aos="flip-left" data-aos-delay="300">
+            <i class="fas fa-users"></i>
+            <p>Teams</p>
+        </div>
+    </div>
+</section>
+
+<section id="experience">
+    <h2 data-aos="fade-up">Mon Parcours Professionnel 🤵</h2>
+    <div class="exp-container">
+
+        <div class="exp-card" data-aos="fade-up">
+            <div class="exp-header">
+                <div class="exp-info">
+                    <h3>Job d'été 💼</h3>
+                    <p class="exp-company">Cometel SA · Genève, Suisse</p>
+                    <p class="exp-date">Juillet 2025 (4 semaines)</p>
+                </div>
+            </div>
+            <div class="exp-body">
+                <p>Missions réalisées durant ce job d'été à Cometel SA.</p>
+                <a href="#" class="btn-detail">Plus d'info ici</a>
+            </div>
+        </div>
+
+        <div class="exp-card" data-aos="fade-up">
+            <div class="exp-header">
+                <div class="exp-info">
+                    <h3>Stagiaire 🎓</h3>
+                    <p class="exp-company">Cometel SA · Genève, Suisse</p>
+                    <p class="exp-date">Janvier 2025 (3 Semaines)</p>
+                </div>
+            </div>
+            <div class="exp-body">
+                <p>Stage effectué dans le cadre de la dernière année de BAC PRO.</p>
+                <a href="#" class="btn-detail">Rapport de Stage</a>
+            </div>
+        </div>
+
+        <div class="exp-card" data-aos="fade-up">
+            <div class="exp-header">
+                <div class="exp-info">
+                    <h3>Stagiaire 🛠️</h3>
+                    <p class="exp-company">ENILV · La Roche-sur-Foron</p>
+                    <p class="exp-date">Décembre 2024 (3 semaines)</p>
+                </div>
+            </div>
+            <div class="exp-body">
+                <p>Immersion technique au sein de l'ENILV.</p>
+            </div>
+        </div>
+
+        <div class="exp-card" data-aos="fade-up">
+            <div class="exp-header">
+                <div class="exp-info">
+                    <h3>Job d'été 💼</h3>
+                    <p class="exp-company">Cometel SA · Genève, Suisse</p>
+                    <p class="exp-date">Juillet 2024 (4 semaines)</p>
+                </div>
+            </div>
+            <div class="exp-body">
+                <p>Découverte des Jobs d'été</p>
+            </div>
+        </div>
+
+        <div class="exp-card" data-aos="fade-up">
+            <div class="exp-header">
+                <div class="exp-info">
+                    <h3>Stagiaire 🎓</h3>
+                    <p class="exp-company">Cometel SA · Genève, Suisse</p>
+                    <p class="exp-date">Juin 2023 - Juillet 2023 (6 semaines)</p>
+                </div>
+            </div>
+            <div class="exp-body">
+                <p>Premier stage de découverte et de pratique en entreprise.</p>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<section id="education">
+    <h2 data-aos="fade-up">Mon Parcours Scolaire 🎓</h2>
+    <div class="exp-container">
+
+        <div class="exp-card" data-aos="fade-up">
+            <div class="exp-header">
+                <div class="exp-info">
+                    <h3>BTS SIO Option SISR</h3>
+                    <p class="exp-company">Lycée Saint Michel · Annecy</p>
+                    <p class="exp-date">2025 - 2027 (En cours)</p>
+                </div>
+            </div>
+            <div class="exp-body">
+                <p>Brevet de Technicien Supérieur aux Services Informatiques aux Organisations - Option Solutions d'Infrastructure, Systèmes et Réseaux.</p>
+                <p style="margin-top: 10px;">Pour ma future orientation professionnelle, je me suis orienté vers un BTS SIO dans lequel je pourrais améliorer mes compétences en informatique et gestion d'infrastructures réseaux.</p>
+            </div>
+        </div>
+
+        <div class="exp-card" data-aos="fade-up">
+            <div class="exp-header">
+                <div class="exp-info">
+                    <h3>BAC PRO SN RISC</h3>
+                    <p class="exp-company">Lycée Saint-Vincent de Paul · Collonges-sous-salève</p>
+                    <p class="exp-date">2022 - 2025</p>
+                </div>
+            </div>
+            <div class="exp-body">
+                <p>Baccalauréat professionnel Systèmes Numériques, Réseaux Informatiques et Systèmes Communicants</p>
+                <p style="margin-top: 10px;">Obtention du diplôme avec mention.</p>
+            </div>
+        </div>
+
+        <div class="exp-card" data-aos="fade-up">
+            <div class="exp-header">
+                <div class="exp-info">
+                    <h3>Brevet des Collèges</h3>
+                    <p class="exp-company">Collège Saint-Marie et Lycée Saint-famille · La Roche sur Foron</p>
+                    <p class="exp-date">2018 - 2022</p>
+                </div>
+            </div>
+            <div class="exp-body">
+                <p>Après avoir effectué 3 ans de ma scolarité au collège Saint-Marie à La Roche sur Foron, j'ai finalement obtenu mon brevet professionnel durant ma 4ème année au Lycée Saint-famille.</p>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<section id="contact">
+    <h2 data-aos="fade-up">Contact ✉️</h2>
+    <div class="contact-cards-container">
+
+        <div class="contact-card" data-aos="zoom-in">
+            <i class="fas fa-map-marker-alt"></i>
+            <h3>Localisation</h3>
+            <p>74000 Annecy, France</p>
+        </div>
+
+        <div class="contact-card" data-aos="zoom-in" data-aos-delay="100">
+            <i class="fas fa-envelope"></i>
+            <h3>Email</h3>
+            <p>max.richin@gmail.com</p>
+        </div>
+
+        <div class="contact-card" data-aos="zoom-in" data-aos-delay="200">
+            <i class="fas fa-phone-alt"></i>
+            <h3>Téléphone</h3>
+            <p>07 69 52 77 06</p>
+        </div>
+
+    </div>
+</section>
+
+<footer>
+    <p>Copyright 2026 © Maxime Richin - Portfolio SISR</p>
+</footer>
+
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+    AOS.init({ duration: 1000, once: true });
+</script>
+</body>
+</html>
