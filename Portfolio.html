@@ -17,6 +17,7 @@
             --bg-color: #0b0b0d;
             --card-bg: #16161a;
             --accent-color: #007bff;
+            --glow: 0 0 22px rgba(0, 123, 255, 0.55), 0 0 4px rgba(0, 123, 255, 0.4);
             --text-main: #ffffff;
             --text-secondary: #a0a0a0;
             --nav-bg: rgba(11, 11, 13, 0.95);
@@ -41,7 +42,7 @@
             --footer-bg: #ebecef;
             --hover-shadow: rgba(0, 0, 0, 0.12);
         }
-        body, nav, footer, .skill-card, .contact-card, .option-card, .exp-card { transition: background-color 0.3s, color 0.3s, border-color 0.3s, transform 0.3s, box-shadow 0.3s; }
+        body, nav, footer { transition: background-color 0.3s, color 0.3s, border-color 0.3s, transform 0.3s, box-shadow 0.3s; }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         html { scroll-behavior: smooth; }
@@ -96,11 +97,38 @@
         h2 { font-size: 2.5rem; margin-bottom: 50px; text-align: center; position: relative; }
         h2::after { content: ''; width: 50px; height: 4px; background: var(--accent-color); position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%); }
 
+        /* --- BLOCS (tout le texte est dans un bloc pour rester lisible) --- */
+        .block {
+            background: var(--card-bg); border: 1px solid var(--border-color);
+            border-radius: 15px; padding: 30px;
+        }
+        .hero-card { padding: 50px 70px; display: flex; flex-direction: column; align-items: center; }
+        .hero-card .btn-cv { margin-top: 10px; }
+        section > h2 {
+            display: table; margin: 0 auto 50px; padding: 12px 36px 24px;
+            background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 15px;
+        }
+        section > h2::after { bottom: 10px; }
+        @media (max-width: 700px) {
+            .hero-card { padding: 30px 20px; }
+            .block { padding: 20px; }
+            section > h2 { padding: 10px 20px 22px; }
+        }
+
+        /* --- LUEUR BLEUE AU SURVOL --- */
+        .block, section > h2, .option-card, .skill-card, .exp-card, .contact-card {
+            transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s, background-color 0.3s, color 0.3s;
+        }
+        .block:hover, section > h2:hover, .option-card:hover, .skill-card:hover, .exp-card:hover, .contact-card:hover {
+            box-shadow: var(--glow);
+            border-color: var(--accent-color);
+        }
+
         /* --- ABOUT & BTS INFO --- */
-        .about-text { margin-bottom: 40px; font-size: 1.1rem; }
+        .about-text { font-size: 1.1rem; }
         .bts-info h3 { color: var(--accent-color); margin-bottom: 20px; font-size: 1.8rem; }
         .options-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 30px; }
-        .option-card { background: var(--card-bg); padding: 25px; border-radius: 15px; border: 1px solid transparent; transition: 0.3s; }
+        .option-card { background: var(--card-bg); padding: 25px; border-radius: 15px; border: 1px solid var(--border-color); }
         .option-card.highlight { border: 1px solid var(--accent-color); box-shadow: 0 0 15px rgba(0, 123, 255, 0.1); }
         .option-card h4 { color: var(--accent-color); margin-bottom: 15px; font-size: 1.3rem; }
         .option-card ul { margin-top: 15px; padding-left: 20px; list-style-type: square; font-size: 0.9rem; color: var(--text-secondary); }
@@ -129,10 +157,7 @@
             transition: 0.3s;
         }
 
-        .exp-card:hover {
-            transform: scale(1.02);
-            box-shadow: 0 10px 30px var(--hover-shadow);
-        }
+        .exp-card:hover { transform: scale(1.02); }
 
         .exp-header {
             display: flex;
@@ -190,8 +215,6 @@
 
         .contact-card:hover {
             transform: translateY(-10px);
-            border-color: var(--accent-color);
-            box-shadow: 0 10px 30px rgba(0, 123, 255, 0.2);
         }
 
         .contact-card i {
@@ -238,18 +261,19 @@
 </nav>
 
 <header id="home">
-    <h1 data-aos="fade-down">MAXIME RICHIN</h1>
-    <p class="subtitle" data-aos="fade-up">Étudiant en BTS SIO SISR</p>
+  <div class="hero-card block" data-aos="fade-down">
+    <h1>MAXIME RICHIN</h1>
+    <p class="subtitle">Étudiant en BTS SIO SISR</p>
     <a href="CV_Maxime_Richin.pdf" class="btn-cv" download>
         Télécharger mon CV <i class="fas fa-download"></i>
     </a>
-
+  </div>
 </header>
 
 <section id="about" data-aos="fade-up">
     <h2>À Propos</h2>
     <div class="about-container">
-        <div class="about-text">
+        <div class="about-text block">
             <p>Bonjour, moi c'est <strong>Maxime Richin</strong> 👋. Je suis actuellement étudiant au <strong>lycée Saint Michel à Annecy</strong> en première année de BTS SIO (Services Informatiques aux Organisations) dans l'option <strong>SISR</strong>.</p>
             <br>
             <p>Actuellement toujours en cours d'étude, je vous propose sur ce portfolio de retrouver ci-dessous les différentes études que j'ai pu entreprendre au sein de ma scolarité.</p>
@@ -257,11 +281,13 @@
     </div>
 
     <div class="bts-info" style="margin-top: 50px;">
+      <div class="block bts-intro">
         <h3>Qu'est ce que le BTS SIO 🎓 ?</h3>
         <p>Avant de commencer à parler de moi, je vous propose de présenter en premier lieu ma filière dont je suis affecté.</p>
         <p style="margin-top: 15px;">Le Brevet de Technicien Supérieur aux Services Informatiques aux Organisations (BTS SIO), s'adresse à ceux qui souhaitent se former en deux ans aux métiers d'administrateur réseau ou de développeur. Pour par la suite intégré directement le marché du travail ou continuer des études, dans le domaine de l'informatique.</p>
 
-        <p style="margin: 20px 0; font-weight: 600;">Le BTS SIO propose deux spécialités :</p>
+        <p style="margin-top: 20px; font-weight: 600;">Le BTS SIO propose deux spécialités :</p>
+      </div>
 
         <div class="options-grid">
             <div class="option-card highlight">
