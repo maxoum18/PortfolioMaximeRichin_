@@ -270,6 +270,13 @@
             letter-spacing: 1px;
         }
 
+        a.contact-card { display: block; color: var(--text-main); text-decoration: none; }
+        .contact-hint {
+            display: inline-block; margin-top: 12px; font-size: 0.8rem; font-weight: 600;
+            color: var(--accent-color); opacity: 0.85;
+        }
+        .contact-card.copied .contact-hint { color: #22c55e; opacity: 1; }
+
         .contact-card p {
             color: var(--text-secondary);
             font-size: 1rem;
@@ -515,23 +522,30 @@
     <h2 data-aos="fade-up">Contact ✉️</h2>
     <div class="contact-cards-container">
 
-        <div class="contact-card" data-aos="zoom-in">
+        <a class="contact-card" id="contact-map" data-aos="zoom-in"
+           href="https://www.google.com/maps/search/?api=1&amp;query=Annecy%2C%2074000%2C%20France"
+           target="_blank" rel="noopener" aria-label="Voir Annecy sur Google Maps">
             <i class="fas fa-map-marker-alt"></i>
             <h3>Localisation</h3>
             <p>74000 Annecy, France</p>
-        </div>
+            <span class="contact-hint">Ouvrir dans Google Maps</span>
+        </a>
 
-        <div class="contact-card" data-aos="zoom-in" data-aos-delay="100">
+        <a class="contact-card" id="contact-mail" data-aos="zoom-in" data-aos-delay="100"
+           href="#contact" target="_blank" rel="noopener" aria-label="Écrire un e-mail avec Gmail">
             <i class="fas fa-envelope"></i>
             <h3>Email</h3>
-            <p>max.richin@gmail.com</p>
-        </div>
+            <p id="mail-address">max.richin@gmail.com</p>
+            <span class="contact-hint">Écrire avec Gmail</span>
+        </a>
 
-        <div class="contact-card" data-aos="zoom-in" data-aos-delay="200">
+        <a class="contact-card" id="contact-phone" data-aos="zoom-in" data-aos-delay="200"
+           href="tel:+33769527706" aria-label="Téléphone : 07 69 52 77 06">
             <i class="fas fa-phone-alt"></i>
             <h3>Téléphone</h3>
             <p>07 69 52 77 06</p>
-        </div>
+            <span class="contact-hint" id="phone-hint">Cliquer pour copier</span>
+        </a>
 
     </div>
 </section>
@@ -669,6 +683,82 @@
         window.addEventListener('scroll', update, { passive: true });
         window.addEventListener('resize', update);
         update();
+    })();
+
+    // --- Liens de contact ---
+    (function () {
+        const ua = navigator.userAgent;
+        const isAndroid = /Android/i.test(ua);
+        const isIOS = /iPhone|iPad|iPod/i.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        const isMobile = isAndroid || isIOS;
+
+        // Essaie d'ouvrir l'application ; si rien ne s'ouvre, on va sur le site
+        function openAppOrWeb(appUrl, webUrl) {
+            let left = false;
+            const onHide = () => { if (document.hidden) left = true; };
+            document.addEventListener('visibilitychange', onHide);
+            window.location.href = appUrl;
+            setTimeout(() => {
+                document.removeEventListener('visibilitychange', onHide);
+                if (!left && !document.hidden) window.location.href = webUrl;
+            }, 1500);
+        }
+        function androidIntent(path, scheme, pkg, fallback) {
+            return 'intent://' + path + '#Intent;scheme=' + scheme + ';package=' + pkg +
+                ';S.browser_fallback_url=' + encodeURIComponent(fallback) + ';end';
+        }
+
+        // Google Maps
+        const mapLink = document.getElementById('contact-map');
+        const mapsWeb = mapLink.href;
+        const place = encodeURIComponent('Annecy, 74000, France');
+        mapLink.addEventListener('click', e => {
+            if (!isMobile) return; // PC : Google Maps dans un nouvel onglet
+            e.preventDefault();
+            if (isAndroid) window.location.href = androidIntent('maps.google.com/maps?q=' + place, 'https', 'com.google.android.apps.maps', mapsWeb);
+            else openAppOrWeb('comgooglemaps://?q=' + place, mapsWeb);
+        });
+
+        // Gmail : nouveau brouillon adressé à l'e-mail affiché sur la carte
+        const mailLink = document.getElementById('contact-mail');
+        const to = encodeURIComponent(document.getElementById('mail-address').textContent.trim());
+        const gmailWeb = 'https://mail.google.com/mail/?view=cm&fs=1&to=' + to;
+        mailLink.href = gmailWeb;
+        mailLink.addEventListener('click', e => {
+            if (!isMobile) return; // PC : Gmail (nouveau message) dans un nouvel onglet
+            e.preventDefault();
+            if (isAndroid) window.location.href = androidIntent('co?to=' + to, 'googlegmail', 'com.google.android.gm', gmailWeb);
+            else openAppOrWeb('googlegmail://co?to=' + to, gmailWeb);
+        });
+
+        // Téléphone : page d'appel sur mobile, copie sur PC
+        const phoneLink = document.getElementById('contact-phone');
+        const phoneHint = document.getElementById('phone-hint');
+        if (isMobile) phoneHint.textContent = 'Appuyer pour appeler';
+        function copyText(text) {
+            if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(text);
+            return new Promise((resolve, reject) => {
+                const ta = document.createElement('textarea');
+                ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+                document.body.appendChild(ta); ta.select();
+                try { document.execCommand('copy') ? resolve() : reject(); } catch (err) { reject(err); }
+                ta.remove();
+            });
+        }
+        let hintTimer;
+        phoneLink.addEventListener('click', e => {
+            if (isMobile) return; // mobile : le lien tel: ouvre la page d'appel
+            e.preventDefault();
+            copyText('07 69 52 77 06').then(() => {
+                phoneHint.textContent = 'Numéro copié ✓';
+                phoneLink.classList.add('copied');
+            }).catch(() => { phoneHint.textContent = 'Copie impossible'; });
+            clearTimeout(hintTimer);
+            hintTimer = setTimeout(() => {
+                phoneHint.textContent = 'Cliquer pour copier';
+                phoneLink.classList.remove('copied');
+            }, 2500);
+        });
     })();
 
     // --- Changement de thème (clic = bascule sombre / clair) ---
