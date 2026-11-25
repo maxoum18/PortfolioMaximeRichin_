@@ -694,14 +694,21 @@
 
         // Essaie d'ouvrir l'application ; si rien ne s'ouvre, on va sur le site
         function openAppOrWeb(appUrl, webUrl) {
+            // Si la page est quittée, masquée ou perd le focus (ex. fenêtre « Ouvrir dans Gmail ? »),
+            // c'est que l'application prend la main : on n'ouvre pas le site.
             let left = false;
+            const mark = () => { left = true; };
             const onHide = () => { if (document.hidden) left = true; };
             document.addEventListener('visibilitychange', onHide);
+            window.addEventListener('pagehide', mark);
+            window.addEventListener('blur', mark);
             window.location.href = appUrl;
             setTimeout(() => {
                 document.removeEventListener('visibilitychange', onHide);
+                window.removeEventListener('pagehide', mark);
+                window.removeEventListener('blur', mark);
                 if (!left && !document.hidden) window.location.href = webUrl;
-            }, 1500);
+            }, 2500);
         }
         function androidIntent(path, scheme, pkg, fallback) {
             return 'intent://' + path + '#Intent;scheme=' + scheme + ';package=' + pkg +
@@ -721,13 +728,17 @@
 
         // Gmail : nouveau brouillon adressé à l'e-mail affiché sur la carte
         const mailLink = document.getElementById('contact-mail');
-        const to = encodeURIComponent(document.getElementById('mail-address').textContent.trim());
+        const addr = document.getElementById('mail-address').textContent.trim();
+        const to = encodeURIComponent(addr);
         const gmailWeb = 'https://mail.google.com/mail/?view=cm&fs=1&to=' + to;
         mailLink.href = gmailWeb;
         mailLink.addEventListener('click', e => {
             if (!isMobile) return; // PC : Gmail (nouveau message) dans un nouvel onglet
             e.preventDefault();
-            if (isAndroid) window.location.href = androidIntent('co?to=' + to, 'googlegmail', 'com.google.android.gm', gmailWeb);
+            // Android : e-mail (mailto) envoyé directement à l'application Gmail, sinon le site
+            if (isAndroid) window.location.href = 'intent:' + addr +
+                '#Intent;scheme=mailto;action=android.intent.action.SENDTO;package=com.google.android.gm;S.browser_fallback_url=' +
+                encodeURIComponent(gmailWeb) + ';end';
             else openAppOrWeb('googlegmail://co?to=' + to, gmailWeb);
         });
 
