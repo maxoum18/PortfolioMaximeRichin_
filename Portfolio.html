@@ -66,7 +66,27 @@
         nav ul li { margin-left: 30px; }
         nav ul li a { text-decoration: none; color: var(--text-main); font-weight: 500; transition: 0.3s; }
         nav ul li a:hover { color: var(--accent-color); }
-        nav ul { align-items: center; }
+        nav ul { align-items: center; margin-left: auto; }
+        .nav-actions { display: flex; align-items: center; gap: 10px; margin-left: 30px; }
+        .theme-btn.menu-toggle { display: none; }
+
+        /* --- MENU TÉLÉPHONE --- */
+        @media (max-width: 900px) {
+            nav { padding: 14px 16px; flex-wrap: wrap; }
+            .logo { font-size: 1.3rem; }
+            .nav-actions { margin-left: auto; }
+            .theme-btn.menu-toggle { display: flex; }
+            nav ul {
+                display: none; order: 3; width: 100%; margin: 12px 0 4px;
+                flex-direction: column; align-items: stretch;
+                background: var(--card-bg); border: 1px solid var(--border-color);
+                border-radius: 12px; padding: 6px;
+            }
+            nav ul.open { display: flex; }
+            nav ul li { margin: 0; }
+            nav ul li a { display: block; padding: 12px 14px; border-radius: 8px; }
+            nav ul li a:hover { background: var(--bg-color); }
+        }
 
         /* --- BOUTON THEME --- */
         .theme-btn {
@@ -111,6 +131,8 @@
         section > h2::after { bottom: 10px; }
         @media (max-width: 700px) {
             .hero-card { padding: 30px 20px; }
+            h1 { font-size: 2.2rem; letter-spacing: 1px; }
+            .subtitle { font-size: 1.15rem; }
             .block { padding: 20px; }
             section > h2 { padding: 10px 20px 22px; }
         }
@@ -245,19 +267,22 @@
 
 <nav>
     <div class="logo">M. RICHIN</div>
-    <ul>
+    <ul id="nav-links">
             <li><a href="#home">Accueil</a></li>
             <li><a href="#about">À Propos</a></li>
             <li><a href="#tools">Outils</a></li>
             <li><a href="#experience">Parcours Pro</a></li>
             <li><a href="#education">Parcours Scolaire</a></li>
             <li><a href="#contact">Contact</a></li>
-            <li>
-                <button class="theme-btn" id="theme-btn" aria-label="Passer au thème clair" title="Passer au thème clair">
-                    <i class="fas fa-moon" id="theme-icon"></i>
-                </button>
-            </li>
     </ul>
+    <div class="nav-actions">
+        <button class="theme-btn" id="theme-btn" aria-label="Passer au thème clair" title="Passer au thème clair">
+            <i class="fas fa-moon" id="theme-icon"></i>
+        </button>
+        <button class="theme-btn menu-toggle" id="menu-toggle" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="nav-links">
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
 </nav>
 
 <header id="home">
@@ -508,8 +533,9 @@
         const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789{}[]()<>/\\|;:=+-*_~!?#$%&@^';
         const palettes = {
-            dark:  ['#4b4b55', '#4b4b55', '#6d4fb3', '#3f8a52', '#9a8a2e', '#2f6fc9', '#a04a8a'],
-            light: ['#b9bac2', '#b9bac2', '#a58be0', '#7cc28d', '#d1bf5e', '#7fb0ee', '#d892c4']
+            // gris, violet, vert matrix (le gris revient plus souvent)
+            dark:  ['#4b4b55', '#4b4b55', '#6d4fb3', '#00c83c'],
+            light: ['#b9bac2', '#b9bac2', '#a58be0', '#5fd67f']
         };
         let w, h, dpr, cols, rows, cell, grid = [], last = 0;
 
@@ -561,6 +587,18 @@
         resize();
         if (!reduceMotion) requestAnimationFrame(tick);
     })();
+
+    // --- Menu téléphone ---
+    const menuToggle = document.getElementById('menu-toggle');
+    const navLinks = document.getElementById('nav-links');
+    function setMenu(open) {
+        navLinks.classList.toggle('open', open);
+        menuToggle.setAttribute('aria-expanded', open);
+        menuToggle.setAttribute('aria-label', open ? 'Fermer le menu' : 'Ouvrir le menu');
+        menuToggle.querySelector('i').className = open ? 'fas fa-xmark' : 'fas fa-bars';
+    }
+    menuToggle.addEventListener('click', () => setMenu(!navLinks.classList.contains('open')));
+    navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setMenu(false)));
 
     // --- Changement de thème (clic = bascule sombre / clair) ---
     const themeBtn = document.getElementById('theme-btn');
